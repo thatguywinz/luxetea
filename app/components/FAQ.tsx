@@ -42,7 +42,7 @@ export default function FAQ() {
           <h2 className="h-display mt-4 text-[clamp(2.2rem,4.5vw,3.6rem)] text-ink">
             Before you order.
           </h2>
-          <p className="mt-5 text-ink/70 leading-snug max-w-sm">
+          <p className="mt-5 text-ink/85 leading-snug max-w-sm">
             Quick answers to the questions we hear most at the counter.
           </p>
         </div>
@@ -51,15 +51,19 @@ export default function FAQ() {
           <ul className="divide-y divide-line border-y border-line">
             {faqs.map((f, i) => {
               const isOpen = open === i;
+              const panelId = `faq-panel-${i}`;
+              const buttonId = `faq-button-${i}`;
               return (
                 <li key={f.q}>
                   <button
+                    id={buttonId}
                     onClick={() => setOpen(isOpen ? null : i)}
                     className="w-full text-left py-5 md:py-6 flex items-center justify-between gap-6 group"
                     aria-expanded={isOpen}
+                    aria-controls={panelId}
                   >
                     <span className="flex items-center gap-5">
-                      <span className="eyebrow text-ink/40 w-10">
+                      <span className="eyebrow text-ink/65 w-10">
                         {String(i + 1).padStart(2, "0")}
                       </span>
                       <span className="font-display text-xl md:text-2xl text-ink leading-snug">
@@ -68,24 +72,40 @@ export default function FAQ() {
                     </span>
                     <span
                       className={[
-                        "h-9 w-9 rounded-full border border-line flex items-center justify-center text-ink/70 transition-transform",
-                        isOpen ? "rotate-45 bg-ink text-cream border-ink" : "",
+                        "h-9 w-9 rounded-full border flex items-center justify-center transition-colors",
+                        isOpen
+                          ? "bg-ink text-cream border-ink"
+                          : "border-line text-ink/80",
                       ].join(" ")}
-                      aria-hidden
+                      aria-hidden="true"
                     >
-                      +
+                      <svg
+                        width="14"
+                        height="14"
+                        viewBox="0 0 14 14"
+                        fill="none"
+                        stroke="currentColor"
+                        strokeWidth="2"
+                        strokeLinecap="round"
+                      >
+                        <line x1="7" y1="2" x2="7" y2="12" className={isOpen ? "hidden" : ""} />
+                        <line x1="2" y1="7" x2="12" y2="7" />
+                      </svg>
                     </span>
                   </button>
                   <AnimatePresence initial={false}>
                     {isOpen && (
                       <motion.div
+                        id={panelId}
+                        role="region"
+                        aria-labelledby={buttonId}
                         initial={{ height: 0, opacity: 0 }}
                         animate={{ height: "auto", opacity: 1 }}
                         exit={{ height: 0, opacity: 0 }}
                         transition={{ duration: 0.35, ease: [0.22, 1, 0.36, 1] }}
                         className="overflow-hidden"
                       >
-                        <p className="pl-[3.75rem] pr-12 pb-6 text-ink/75 leading-relaxed max-w-2xl">
+                        <p className="pl-[3.75rem] pr-12 pb-6 text-ink/90 leading-relaxed max-w-2xl">
                           {f.a}
                         </p>
                       </motion.div>

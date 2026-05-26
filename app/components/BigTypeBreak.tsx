@@ -9,7 +9,7 @@ export default function BigTypeBreak() {
         <motion.h2
           initial={{ opacity: 0, y: 30 }}
           whileInView={{ opacity: 1, y: 0 }}
-          viewport={{ once: true, margin: "-100px" }}
+          viewport={{ once: true, amount: 0.15 }}
           transition={{ duration: 0.9, ease: [0.22, 1, 0.36, 1] }}
           className="h-display text-ink text-[clamp(3rem,11vw,11rem)] leading-[0.88] tracking-tighter"
         >

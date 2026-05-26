@@ -73,6 +73,9 @@ export default function RootLayout({
         />
       </head>
       <body className="min-h-svh bg-cream text-ink font-sans">
+        <a href="#main-content" className="skip-link">
+          Skip to main content
+        </a>
         <SmoothScroll />
         {children}
         <StickyMobileCTA />

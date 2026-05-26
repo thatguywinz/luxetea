@@ -104,20 +104,19 @@ export default function Categories() {
               Six ways to drink at <span className="italic">Luxe</span>.
             </h2>
           </div>
-          <p className="md:max-w-sm text-ink/70 leading-snug">
-            Tap a category to see today&apos;s line-up. Every cup is built fresh
-            in store — you pick the sweetness, ice and toppings.
+          <p className="md:max-w-sm text-ink/80 leading-snug">
+            Six categories, each with today&apos;s line-up. Every cup is built
+            fresh in store — you pick the sweetness, ice and toppings.
           </p>
         </div>
 
         <div className="grid grid-cols-1 md:grid-cols-6 gap-4 md:gap-5">
           {cats.map((c, i) => (
-            <motion.a
+            <motion.article
               key={c.id}
-              href={`#mood`}
               initial={{ opacity: 0, y: 30 }}
               whileInView={{ opacity: 1, y: 0 }}
-              viewport={{ once: true, margin: "-80px" }}
+              viewport={{ once: true, amount: 0.15 }}
               transition={{ duration: 0.6, delay: i * 0.05, ease: [0.22, 1, 0.36, 1] }}
               className={[
                 "group relative overflow-hidden rounded-3xl border border-line",
@@ -164,17 +163,17 @@ export default function Categories() {
                 {c.picks.map((p) => (
                   <span
                     key={p}
-                    className="text-[0.78rem] text-ink/75 bg-cream/70 border border-line rounded-full px-2.5 py-1"
+                    className="text-[0.78rem] text-ink/85 bg-cream/80 border border-line rounded-full px-2.5 py-1"
                   >
                     {p}
                   </span>
                 ))}
               </div>
-            </motion.a>
+            </motion.article>
           ))}
         </div>
 
-        <p className="mt-8 text-xs uppercase tracking-[0.22em] text-ink/45">
+        <p className="mt-8 text-xs uppercase tracking-[0.22em] text-ink/65">
           Menu items shown reflect current public sources · prices subject to change
         </p>
       </div>

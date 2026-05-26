@@ -126,7 +126,7 @@ export default function DrinkBuilder() {
               We build every drink, <span className="italic text-peach">one cup at a time.</span>
             </h2>
           </div>
-          <p className="mt-4 md:mt-0 md:max-w-xs text-cream/70 text-sm leading-relaxed">
+          <p className="mt-4 md:mt-0 md:max-w-xs text-cream/90 text-sm leading-relaxed">
             No pre-mixes. No shortcuts. Scroll to watch a Luxe drink come
             together.
           </p>
@@ -154,7 +154,7 @@ export default function DrinkBuilder() {
                     {String(i + 1).padStart(2, "0")}
                   </span>
                   <h3 className="font-display text-2xl leading-snug">{l.label}</h3>
-                  <p className="text-cream/70 text-sm mt-1 max-w-md leading-relaxed">
+                  <p className="text-cream/90 text-sm mt-1 max-w-md leading-relaxed">
                     {l.note}
                   </p>
                 </li>
@@ -167,7 +167,7 @@ export default function DrinkBuilder() {
                 style={{ width: "100%" }}
               />
             </div>
-            <div className="mt-3 flex items-center justify-between text-[0.7rem] uppercase tracking-[0.22em] text-cream/45">
+            <div className="mt-3 flex items-center justify-between text-[0.7rem] uppercase tracking-[0.22em] text-cream/85">
               <span>Step {String(active + 1).padStart(2, "0")} / 04</span>
               <span>Scroll to brew →</span>
             </div>
@@ -178,7 +178,7 @@ export default function DrinkBuilder() {
               {layers.map((l, i) => (
                 <div
                   key={l.label}
-                  aria-hidden={i !== active}
+                  aria-hidden="true"
                   className={[
                     "absolute inset-0 transition-opacity duration-700",
                     i === active ? "opacity-100" : "opacity-0",
@@ -186,7 +186,7 @@ export default function DrinkBuilder() {
                 >
                   <Image
                     src={l.image}
-                    alt={l.alt}
+                    alt=""
                     fill
                     sizes="(min-width: 768px) 50vw, 100vw"
                     className="object-cover"
@@ -234,7 +234,7 @@ export default function DrinkBuilder() {
               </div>
               <div className="p-5">
                 <h3 className="font-display text-2xl">{l.label}</h3>
-                <p className="text-cream/70 text-sm mt-1.5 leading-relaxed">
+                <p className="text-cream/90 text-sm mt-1.5 leading-relaxed">
                   {l.note}
                 </p>
               </div>

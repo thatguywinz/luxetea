@@ -110,7 +110,7 @@ export default function HorizontalGallery() {
                 A look around Luxe.
               </h2>
             </div>
-            <p className="md:max-w-xs text-ink/65 text-sm">
+            <p className="md:max-w-xs text-ink/80 text-sm">
               Drift through the cafe — fresh fruit, warm wood, drink builds
               and the Merton St doorway.
             </p>

@@ -60,12 +60,12 @@ export default function ContactForm() {
           <h2 className="h-display mt-4 text-[clamp(2.4rem,5vw,4rem)] text-ink">
             Catering, group orders <span className="italic">or hello</span>.
           </h2>
-          <p className="mt-5 text-ink/75 leading-snug max-w-md">
+          <p className="mt-5 text-ink/85 leading-snug max-w-md">
             Five quick fields. We&apos;ll get back to you, usually the same day.
             For walk-ins, just come by — every drink is built fresh on the spot.
           </p>
 
-          <ul className="mt-8 space-y-3 text-sm text-ink/75">
+          <ul className="mt-8 space-y-3 text-sm text-ink/85">
             {[
               "Office catering and group orders",
               "Event drink stations",
@@ -84,9 +84,14 @@ export default function ContactForm() {
           onSubmit={handleSubmit(onSubmit)}
           className="md:col-span-7 bg-cream rounded-3xl border border-line p-6 md:p-10 shadow-soft"
           noValidate
+          aria-label="Luxe Tea enquiry form"
         >
           {sent ? (
-            <div className="min-h-[420px] flex flex-col items-center justify-center text-center">
+            <div
+              className="min-h-[420px] flex flex-col items-center justify-center text-center"
+              role="status"
+              aria-live="polite"
+            >
               <div className="h-16 w-16 rounded-full bg-matcha flex items-center justify-center mb-6">
                 <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="#2A2725" strokeWidth="2.4">
                   <path d="M4 12.5l5 5 11-11" />
@@ -111,39 +116,68 @@ export default function ContactForm() {
                 label="Your name"
                 required
                 error={errors.name?.message}
+                htmlFor="contact-name"
               >
                 <input
                   {...register("name")}
+                  id="contact-name"
                   type="text"
                   autoComplete="name"
                   placeholder="Alex Tran"
+                  required
+                  aria-required="true"
+                  aria-invalid={errors.name ? "true" : "false"}
                   className="form-input"
                 />
               </Field>
 
-              <Field label="Phone" required error={errors.phone?.message}>
+              <Field
+                label="Phone"
+                required
+                error={errors.phone?.message}
+                htmlFor="contact-phone"
+              >
                 <input
                   {...register("phone")}
+                  id="contact-phone"
                   type="tel"
                   autoComplete="tel"
                   inputMode="tel"
                   placeholder="(416) 555 1234"
+                  required
+                  aria-required="true"
+                  aria-invalid={errors.phone ? "true" : "false"}
                   className="form-input"
                 />
               </Field>
 
-              <Field label="Email" error={errors.email?.message}>
+              <Field
+                label="Email"
+                error={errors.email?.message}
+                htmlFor="contact-email"
+              >
                 <input
                   {...register("email")}
+                  id="contact-email"
                   type="email"
                   autoComplete="email"
                   placeholder="you@example.com"
+                  aria-invalid={errors.email ? "true" : "false"}
                   className="form-input"
                 />
               </Field>
 
-              <Field label="Topic" error={errors.topic?.message}>
-                <select {...register("topic")} className="form-input">
+              <Field
+                label="Topic"
+                error={errors.topic?.message}
+                htmlFor="contact-topic"
+              >
+                <select
+                  {...register("topic")}
+                  id="contact-topic"
+                  className="form-input"
+                  aria-invalid={errors.topic ? "true" : "false"}
+                >
                   <option>Catering</option>
                   <option>Group order</option>
                   <option>Wholesale tea</option>
@@ -155,26 +189,30 @@ export default function ContactForm() {
                 label="Anything else?"
                 className="md:col-span-2"
                 error={errors.message?.message}
+                htmlFor="contact-message"
               >
                 <textarea
                   {...register("message")}
+                  id="contact-message"
                   rows={4}
                   placeholder="Date, headcount, drink preferences…"
+                  aria-invalid={errors.message ? "true" : "false"}
                   className="form-input resize-none"
                 />
               </Field>
 
-              <div className="md:col-span-2 flex items-center justify-between gap-4 mt-2">
-                <p className="text-xs text-ink/45 max-w-xs leading-snug">
+              <div className="md:col-span-2 flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4 mt-2">
+                <p className="text-xs text-ink/70 max-w-xs leading-snug">
                   By sending you agree we can use your details to reply about
                   your enquiry only.
                 </p>
                 <button
                   type="submit"
                   disabled={isSubmitting}
-                  className="btn-primary"
+                  className="btn-primary whitespace-nowrap"
                 >
-                  {isSubmitting ? "Sending…" : "Send enquiry →"}
+                  <span>{isSubmitting ? "Sending…" : "Send enquiry"}</span>
+                  {!isSubmitting && <span aria-hidden>→</span>}
                 </button>
               </div>
             </div>
@@ -211,21 +249,36 @@ function Field({
   required,
   error,
   className,
+  htmlFor,
 }: {
   label: string;
   children: React.ReactNode;
   required?: boolean;
   error?: string;
   className?: string;
+  htmlFor?: string;
 }) {
   return (
-    <label className={["block", className].filter(Boolean).join(" ")}>
-      <span className="block eyebrow text-ink/55 mb-2">
-        {label} {required && <span className="text-espresso">*</span>}
+    <label
+      htmlFor={htmlFor}
+      className={["block", className].filter(Boolean).join(" ")}
+    >
+      <span className="block eyebrow text-ink/80 mb-2">
+        {label}{" "}
+        {required && (
+          <span className="text-espresso" aria-label="required">
+            *
+          </span>
+        )}
       </span>
       {children}
       {error && (
-        <span className="block mt-1.5 text-xs text-espresso">{error}</span>
+        <span
+          role="alert"
+          className="block mt-1.5 text-xs text-espresso font-medium"
+        >
+          {error}
+        </span>
       )}
     </label>
   );

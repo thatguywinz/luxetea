@@ -150,6 +150,34 @@ textarea {
     transition-duration: 0.001ms !important;
     scroll-behavior: auto !important;
   }
+  .animate-marquee {
+    animation: none !important;
+    transform: none !important;
+  }
+  .animate-pulse {
+    animation: none !important;
+  }
+}
+
+/* Skip to content link */
+.skip-link {
+  position: absolute;
+  left: 12px;
+  top: -120px;
+  z-index: 100;
+  background: var(--color-ink);
+  color: var(--color-cream);
+  padding: 12px 18px;
+  border-radius: 999px;
+  font-weight: 500;
+  font-size: 0.9rem;
+  transition: top 200ms ease;
+}
+.skip-link:focus,
+.skip-link:focus-visible {
+  top: 12px;
+  outline: 2px solid var(--color-peach);
+  outline-offset: 3px;
 }
 
 /* Lenis smooth scroll setup */

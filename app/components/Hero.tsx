@@ -4,8 +4,8 @@ import Image from "next/image";
 import { motion } from "framer-motion";
 import { BUSINESS } from "../lib/business";
 
-const FADE_UP = {
-  hidden: { opacity: 0, y: 26 },
+const RISE = {
+  hidden: { opacity: 1, y: 18 },
   show: { opacity: 1, y: 0 },
 };
 
@@ -15,11 +15,6 @@ export default function Hero() {
       id="top"
       className="relative pt-24 md:pt-28 lg:pt-32 pb-12 md:pb-20 overflow-hidden"
     >
-      <h1 className="sr-only">
-        Luxe Tea — fresh fruit tea, Vietnamese coffee, cold brew and matcha in
-        Midtown Toronto near Davisville
-      </h1>
-
       {/* DESKTOP / TABLET HERO --------------------------------------------- */}
       <div className="hidden md:block">
         <div className="mx-auto max-w-[1480px] px-10 grid grid-cols-12 gap-10 items-end">
@@ -27,20 +22,19 @@ export default function Hero() {
             <motion.p
               initial="hidden"
               animate="show"
-              variants={FADE_UP}
-              transition={{ duration: 0.7, delay: 0.05 }}
+              variants={RISE}
+              transition={{ duration: 0.5, delay: 0.02, ease: [0.22, 1, 0.36, 1] }}
               className="eyebrow text-espresso flex items-center gap-3"
             >
               <span className="inline-block w-8 h-px bg-espresso" />
               Davisville · 230 Merton St
             </motion.p>
 
-            <motion.p
-              aria-hidden="true"
+            <motion.h1
               initial="hidden"
               animate="show"
-              variants={FADE_UP}
-              transition={{ duration: 0.8, delay: 0.12 }}
+              variants={RISE}
+              transition={{ duration: 0.55, delay: 0.06, ease: [0.22, 1, 0.36, 1] }}
               className="h-display mt-6 text-[clamp(3.4rem,8vw,7.2rem)] text-ink"
             >
               Fresh tea,
@@ -48,14 +42,14 @@ export default function Hero() {
               coffee &amp; matcha,
               <br />
               <span className="italic text-espresso">made by hand.</span>
-            </motion.p>
+            </motion.h1>
 
             <motion.p
               initial="hidden"
               animate="show"
-              variants={FADE_UP}
-              transition={{ duration: 0.7, delay: 0.22 }}
-              className="mt-7 max-w-md text-lg leading-snug text-ink/75"
+              variants={RISE}
+              transition={{ duration: 0.5, delay: 0.12, ease: [0.22, 1, 0.36, 1] }}
+              className="mt-7 max-w-md text-lg leading-snug text-ink/80"
             >
               A cozy Midtown cafe near Davisville Station. Fruit teas,
               Vietnamese coffee, cold brew and matcha &mdash; built daily, one cup
@@ -65,8 +59,8 @@ export default function Hero() {
             <motion.div
               initial="hidden"
               animate="show"
-              variants={FADE_UP}
-              transition={{ duration: 0.7, delay: 0.32 }}
+              variants={RISE}
+              transition={{ duration: 0.5, delay: 0.18, ease: [0.22, 1, 0.36, 1] }}
               className="mt-9 flex items-center gap-3"
             >
               <a href="#menu" className="btn-primary">
@@ -81,9 +75,9 @@ export default function Hero() {
             <motion.div
               initial="hidden"
               animate="show"
-              variants={FADE_UP}
-              transition={{ duration: 0.7, delay: 0.42 }}
-              className="mt-10 flex items-center gap-6 text-sm text-ink/60"
+              variants={RISE}
+              transition={{ duration: 0.5, delay: 0.24, ease: [0.22, 1, 0.36, 1] }}
+              className="mt-10 flex items-center gap-6 text-sm text-ink/75"
             >
               <span className="flex items-center gap-2">
                 <span className="h-2 w-2 rounded-full bg-matcha-deep animate-pulse" />
@@ -99,9 +93,9 @@ export default function Hero() {
           {/* Hero image cluster */}
           <div className="col-span-5 relative">
             <motion.div
-              initial={{ opacity: 0, scale: 1.06, y: 40 }}
+              initial={{ opacity: 1, scale: 1.03, y: 16 }}
               animate={{ opacity: 1, scale: 1, y: 0 }}
-              transition={{ duration: 1.1, ease: [0.22, 1, 0.36, 1] }}
+              transition={{ duration: 0.9, ease: [0.22, 1, 0.36, 1] }}
               className="relative aspect-[4/5] rounded-[28px] overflow-hidden shadow-cup bg-cream-soft"
             >
               <Image
@@ -119,14 +113,14 @@ export default function Hero() {
 
             {/* Floating chip - drink name */}
             <motion.div
-              initial={{ opacity: 0, y: 12 }}
+              initial={{ opacity: 1, y: 6 }}
               animate={{ opacity: 1, y: 0 }}
-              transition={{ duration: 0.7, delay: 0.7 }}
+              transition={{ duration: 0.55, delay: 0.35, ease: [0.22, 1, 0.36, 1] }}
               className="absolute -left-8 top-10 bg-cream rounded-2xl shadow-soft border border-line px-4 py-3 flex items-center gap-3"
             >
               <span className="h-9 w-9 rounded-full bg-lychee" />
               <div className="leading-tight">
-                <p className="text-[0.7rem] uppercase tracking-widest text-ink/50">
+                <p className="text-[0.7rem] uppercase tracking-widest text-ink/65">
                   Today
                 </p>
                 <p className="text-sm font-medium text-ink">Berry Blossom Tea</p>
@@ -135,14 +129,14 @@ export default function Hero() {
 
             {/* Floating price tag */}
             <motion.div
-              initial={{ opacity: 0, y: 12 }}
+              initial={{ opacity: 1, y: 6 }}
               animate={{ opacity: 1, y: 0 }}
-              transition={{ duration: 0.7, delay: 0.85 }}
+              transition={{ duration: 0.55, delay: 0.45, ease: [0.22, 1, 0.36, 1] }}
               className="absolute -right-6 bottom-12 bg-ink text-cream rounded-2xl shadow-cup px-4 py-3 flex items-center gap-3"
             >
               <span className="h-2 w-2 rounded-full bg-peach" />
               <div className="leading-tight">
-                <p className="text-[0.65rem] uppercase tracking-widest text-cream/55">
+                <p className="text-[0.65rem] uppercase tracking-widest text-cream/85">
                   Price range
                 </p>
                 <p className="text-sm font-medium">$10–20 per visit</p>
@@ -151,10 +145,10 @@ export default function Hero() {
 
             {/* Floating sweetness card */}
             <motion.div
-              initial={{ opacity: 0, x: -20 }}
+              initial={{ opacity: 1, x: -8 }}
               animate={{ opacity: 1, x: 0 }}
-              transition={{ duration: 0.7, delay: 1.0 }}
-              className="absolute -right-2 -top-2 bg-matcha rounded-full px-4 py-2 text-xs font-medium text-ink/80"
+              transition={{ duration: 0.55, delay: 0.55, ease: [0.22, 1, 0.36, 1] }}
+              className="absolute -right-2 -top-2 bg-matcha rounded-full px-4 py-2 text-xs font-medium text-ink"
             >
               50% sweet · less ice
             </motion.div>
@@ -162,27 +156,22 @@ export default function Hero() {
         </div>
 
         {/* Scroll cue */}
-        <motion.div
-          initial={{ opacity: 0 }}
-          animate={{ opacity: 1 }}
-          transition={{ duration: 1, delay: 1.2 }}
-          className="mx-auto max-w-[1480px] px-10 mt-14 flex items-center justify-between text-xs uppercase tracking-[0.22em] text-ink/45"
-        >
+        <div className="mx-auto max-w-[1480px] px-10 mt-14 flex items-center justify-between text-xs uppercase tracking-[0.22em] text-ink/65">
           <span>Scroll for today&apos;s menu</span>
           <span className="flex items-center gap-2">
-            <span className="h-px w-12 bg-ink/30" />
+            <span className="h-px w-12 bg-ink/40" />
             01 / 09
           </span>
-        </motion.div>
+        </div>
       </div>
 
       {/* MOBILE HERO ------------------------------------------------------- */}
       <div className="md:hidden">
         <div className="relative px-4">
           <motion.div
-            initial={{ opacity: 0, scale: 1.04 }}
+            initial={{ opacity: 1, scale: 1.02 }}
             animate={{ opacity: 1, scale: 1 }}
-            transition={{ duration: 0.9, ease: [0.22, 1, 0.36, 1] }}
+            transition={{ duration: 0.7, ease: [0.22, 1, 0.36, 1] }}
             className="relative aspect-[4/5] rounded-[28px] overflow-hidden shadow-cup"
           >
             <Image
@@ -205,22 +194,19 @@ export default function Hero() {
             </div>
 
             <div className="absolute bottom-4 left-4 right-4">
-              <p className="eyebrow text-cream/80">Today&apos;s signature</p>
-              <p
-                aria-hidden="true"
-                className="h-display text-cream text-[2.6rem] leading-[0.95] mt-2"
-              >
+              <p className="eyebrow text-cream">Today&apos;s signature</p>
+              <h1 className="h-display text-cream text-[2.6rem] leading-[0.95] mt-2">
                 Fresh tea,
                 <br />
                 made by hand.
-              </p>
+              </h1>
             </div>
           </motion.div>
 
           <motion.div
-            initial={{ opacity: 0, y: 14 }}
+            initial={{ opacity: 1, y: 8 }}
             animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.7, delay: 0.4 }}
+            transition={{ duration: 0.5, delay: 0.2, ease: [0.22, 1, 0.36, 1] }}
             className="mt-5 flex flex-col gap-2"
           >
             <a href="#menu" className="btn-primary w-full">
@@ -235,7 +221,7 @@ export default function Hero() {
             </a>
           </motion.div>
 
-          <p className="mt-4 text-sm text-ink/70 leading-snug">
+          <p className="mt-4 text-sm text-ink/75 leading-snug">
             Cozy Midtown cafe near Davisville. Fruit teas, Vietnamese coffee,
             cold brew &amp; matcha — handcrafted daily.
           </p>

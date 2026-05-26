@@ -28,8 +28,8 @@ export default function LocationSection() {
               },
             ].map((row) => (
               <div key={row.k} className="grid grid-cols-3 gap-4 py-4">
-                <dt className="eyebrow text-ink/45">{row.k}</dt>
-                <dd className="col-span-2 text-ink/85 text-sm md:text-base leading-snug">
+                <dt className="eyebrow text-ink/70">{row.k}</dt>
+                <dd className="col-span-2 text-ink/90 text-sm md:text-base leading-snug">
                   {row.href ? (
                     <a href={row.href} className="hover:text-ink underline-offset-4 hover:underline">
                       {row.v}
@@ -51,7 +51,7 @@ export default function LocationSection() {
             </a>
           </div>
 
-          <p className="mt-5 text-[0.7rem] uppercase tracking-[0.2em] text-ink/40">
+          <p className="mt-5 text-[0.7rem] uppercase tracking-[0.2em] text-ink/70">
             Please verify hours on Google before you visit
           </p>
         </div>
@@ -61,7 +61,7 @@ export default function LocationSection() {
           <motion.div
             initial={{ opacity: 0, y: 30 }}
             whileInView={{ opacity: 1, y: 0 }}
-            viewport={{ once: true, margin: "-80px" }}
+            viewport={{ once: true, amount: 0.15 }}
             transition={{ duration: 0.8, ease: [0.22, 1, 0.36, 1] }}
             className="relative rounded-3xl overflow-hidden border border-line aspect-[5/4] bg-matcha/40"
           >
@@ -110,7 +110,7 @@ export default function LocationSection() {
             </div>
 
             {/* Legend */}
-            <div className="absolute bottom-4 left-4 right-4 flex flex-wrap items-center gap-3 text-[0.7rem] uppercase tracking-widest text-ink/65 bg-cream/85 backdrop-blur-sm rounded-full px-4 py-2.5 w-fit">
+            <div className="absolute bottom-4 left-4 right-4 flex flex-wrap items-center gap-3 text-[0.7rem] uppercase tracking-widest text-ink/80 bg-cream/90 backdrop-blur-sm rounded-full px-4 py-2.5 w-fit">
               <span className="flex items-center gap-1.5">
                 <span className="h-2 w-2 rounded-full bg-espresso" /> Yonge corridor
               </span>
@@ -123,7 +123,7 @@ export default function LocationSection() {
             </div>
 
             {/* Compass label */}
-            <div className="absolute top-4 right-4 bg-cream/85 backdrop-blur-sm rounded-full px-3 py-1.5 text-[0.7rem] uppercase tracking-widest text-ink/65">
+            <div className="absolute top-4 right-4 bg-cream/90 backdrop-blur-sm rounded-full px-3 py-1.5 text-[0.7rem] uppercase tracking-widest text-ink/80">
               Davisville · M4S
             </div>
           </motion.div>

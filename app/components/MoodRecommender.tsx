@@ -88,7 +88,7 @@ export default function MoodRecommender() {
               Tell us the mood. <span className="italic">We&apos;ll pour the drink.</span>
             </h2>
           </div>
-          <p className="md:max-w-sm text-ink/70 leading-snug">
+          <p className="md:max-w-sm text-ink/85 leading-snug">
             Pick a vibe — fruity, creamy, coffee-forward, refreshing or kid-friendly —
             and see today&apos;s easiest first order.
           </p>
@@ -124,7 +124,7 @@ export default function MoodRecommender() {
                   <span
                     className={[
                       "block text-xs mt-0.5",
-                      i === active ? "text-cream/70" : "text-ink/55",
+                      i === active ? "text-cream/90" : "text-ink/75",
                     ].join(" ")}
                   >
                     {opt.prompt}
@@ -184,9 +184,9 @@ export default function MoodRecommender() {
                   transition={{ duration: 0.45 }}
                   className="absolute bottom-6 left-6 right-6 text-cream"
                 >
-                  <p className="eyebrow text-cream/70">Today&apos;s pick</p>
+                  <p className="eyebrow text-cream/90">Today&apos;s pick</p>
                   <h3 className="h-display text-3xl md:text-4xl mt-2">{m.pick}</h3>
-                  <p className="mt-2 text-cream/85 text-sm max-w-md leading-snug">
+                  <p className="mt-2 text-cream/95 text-sm max-w-md leading-snug">
                     {m.why}
                   </p>
                   <a
