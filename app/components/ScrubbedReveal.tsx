@@ -68,15 +68,17 @@ export default function ScrubbedReveal() {
   return (
     <section ref={wrapRef} className="relative bg-cream">
       <div className="relative h-[80vh] md:h-[100vh] overflow-hidden">
-        <div ref={imgRef} className="absolute inset-0 will-change-transform">
+        <div ref={imgRef} className="absolute inset-0 will-change-transform bg-espresso-deep">
           <Image
             src="/placeholders/work-3.jpg"
             alt="Iced drinks styled in a pastel overhead flatlay"
             fill
             sizes="100vw"
             className="object-cover"
+            loading="eager"
+            fetchPriority="high"
           />
-          <div className="absolute inset-0 bg-gradient-to-t from-espresso-deep/55 via-espresso-deep/15 to-transparent" />
+          <div className="absolute inset-0 bg-gradient-to-t from-espresso-deep/70 via-espresso-deep/25 to-transparent" />
         </div>
 
         <div className="relative z-10 mx-auto max-w-[1480px] px-5 md:px-10 h-full flex flex-col justify-end pb-12 md:pb-20">

@@ -34,9 +34,11 @@ const layers = [
   },
 ];
 
+const HEADER_OFFSET_PX = 80;
+
 export default function DrinkBuilder() {
   const sectionRef = useRef<HTMLDivElement>(null);
-  const trackRef = useRef<HTMLDivElement>(null);
+  const pinRef = useRef<HTMLDivElement>(null);
   const [active, setActive] = useState(0);
   const [isDesktop, setIsDesktop] = useState(false);
 
@@ -65,21 +67,37 @@ export default function DrinkBuilder() {
       gsap.registerPlugin(ScrollTrigger);
 
       const sectionEl = sectionRef.current;
-      const trackEl = trackRef.current;
-      if (!sectionEl || !trackEl) return;
+      const pinEl = pinRef.current;
+      if (!sectionEl || !pinEl) return;
 
       ctx = gsap.context(() => {
         const total = layers.length;
+        // Give each step a full viewport of scroll, so coast/momentum can't
+        // skip past one. Snap to step boundaries so the sequence settles on
+        // a step instead of between two.
+        const stepDistance = () => window.innerHeight;
+        const snapPoints = Array.from({ length: total }, (_, i) =>
+          i / (total - 1)
+        );
+
         ScrollTrigger.create({
           trigger: sectionEl,
-          start: "top top",
-          end: () => `+=${window.innerHeight * (total + 0.5)}`,
-          pin: true,
+          start: `top top+=${HEADER_OFFSET_PX - 80}`,
+          end: () => `+=${stepDistance() * total}`,
+          pin: pinEl,
+          pinSpacing: true,
           scrub: 0.6,
+          anticipatePin: 1,
+          snap: {
+            snapTo: snapPoints,
+            duration: { min: 0.2, max: 0.5 },
+            delay: 0.05,
+            ease: "power2.inOut",
+          },
           onUpdate: (self) => {
             const idx = Math.min(
               total - 1,
-              Math.floor(self.progress * total)
+              Math.round(self.progress * (total - 1))
             );
             setActive(idx);
           },
@@ -94,7 +112,7 @@ export default function DrinkBuilder() {
             scrollTrigger: {
               trigger: sectionEl,
               start: "top top",
-              end: () => `+=${window.innerHeight * (total + 0.5)}`,
+              end: () => `+=${stepDistance() * total}`,
               scrub: true,
             },
           }
@@ -115,15 +133,29 @@ export default function DrinkBuilder() {
       id="story"
       ref={sectionRef}
       className="relative bg-espresso-deep text-cream overflow-hidden"
-      style={{ minHeight: isDesktop ? "100vh" : "auto" }}
     >
       <div className="noise absolute inset-0" />
-      <div className="relative mx-auto max-w-[1480px] px-5 md:px-10 py-20 md:py-0 md:h-screen md:flex md:flex-col md:justify-center">
+
+      {/* Pinned wrapper — height reserved minus the sticky header so the
+          heading is never clipped while pinned. */}
+      <div
+        ref={pinRef}
+        className="relative mx-auto max-w-[1480px] px-5 md:px-10 py-20 md:py-12 md:flex md:flex-col md:justify-center"
+        style={
+          isDesktop
+            ? {
+                minHeight: `calc(100vh - ${HEADER_OFFSET_PX}px)`,
+                paddingTop: `${HEADER_OFFSET_PX}px`,
+              }
+            : undefined
+        }
+      >
         <div className="md:flex md:items-end md:justify-between md:gap-10 mb-10 md:mb-12">
           <div className="max-w-2xl">
             <p className="eyebrow text-peach">03 — From leaf to cup</p>
-            <h2 className="h-display mt-4 text-[clamp(2.4rem,5.5vw,4.6rem)] text-cream">
-              We build every drink, <span className="italic text-peach">one cup at a time.</span>
+            <h2 className="h-display mt-4 text-[clamp(2.4rem,5vw,4.2rem)] text-cream">
+              We build every drink,{" "}
+              <span className="italic text-peach">one cup at a time.</span>
             </h2>
           </div>
           <p className="mt-4 md:mt-0 md:max-w-xs text-cream/90 text-sm leading-relaxed">
@@ -133,10 +165,7 @@ export default function DrinkBuilder() {
         </div>
 
         {/* DESKTOP scrubbed track */}
-        <div
-          ref={trackRef}
-          className="hidden md:grid md:grid-cols-12 md:gap-10 md:items-stretch"
-        >
+        <div className="hidden md:grid md:grid-cols-12 md:gap-10 md:items-stretch">
           <div className="col-span-5 self-center">
             <ol className="space-y-4">
               {layers.map((l, i) => (
@@ -153,7 +182,9 @@ export default function DrinkBuilder() {
                   >
                     {String(i + 1).padStart(2, "0")}
                   </span>
-                  <h3 className="font-display text-2xl leading-snug">{l.label}</h3>
+                  <h3 className="font-display text-2xl leading-snug">
+                    {l.label}
+                  </h3>
                   <p className="text-cream/90 text-sm mt-1 max-w-md leading-relaxed">
                     {l.note}
                   </p>
@@ -174,7 +205,7 @@ export default function DrinkBuilder() {
           </div>
 
           <div className="col-span-7 relative">
-            <div className="relative aspect-[4/5] max-h-[72vh] rounded-[28px] overflow-hidden bg-ink/40 shadow-cup">
+            <div className="relative aspect-[4/5] max-h-[68vh] rounded-[28px] overflow-hidden bg-ink/40 shadow-cup">
               {layers.map((l, i) => (
                 <div
                   key={l.label}
@@ -190,16 +221,23 @@ export default function DrinkBuilder() {
                     fill
                     sizes="(min-width: 768px) 50vw, 100vw"
                     className="object-cover"
+                    priority={i === 0}
+                    fetchPriority={i === 0 ? "high" : "auto"}
+                    loading={i === 0 ? "eager" : "eager"}
                   />
-                  <div className="absolute inset-0 bg-gradient-to-t from-espresso-deep/60 via-transparent to-transparent" />
+                  {/* Solid scrim band so overlay text always reads */}
+                  <div className="absolute inset-0 bg-gradient-to-t from-espresso-deep/85 via-espresso-deep/10 to-transparent" />
                   <div className="absolute bottom-6 left-6 right-6 flex items-end justify-between gap-4">
                     <span
                       className="font-display text-[5rem] leading-none text-cream/90"
-                      style={{ WebkitTextStroke: "1px rgba(255,248,236,0.5)", color: "transparent" }}
+                      style={{
+                        WebkitTextStroke: "1px rgba(255,248,236,0.5)",
+                        color: "transparent",
+                      }}
                     >
                       {String(i + 1).padStart(2, "0")}
                     </span>
-                    <span className="bg-cream/95 text-ink text-xs uppercase tracking-widest px-3 py-1.5 rounded-full">
+                    <span className="bg-cream text-ink text-xs uppercase tracking-widest px-3 py-1.5 rounded-full">
                       {l.label}
                     </span>
                   </div>
@@ -216,13 +254,15 @@ export default function DrinkBuilder() {
               key={l.label}
               className="relative overflow-hidden rounded-3xl bg-ink/30 border border-cream/10"
             >
-              <div className="relative aspect-[4/3]">
+              <div className="relative aspect-[4/3] bg-espresso-deep">
                 <Image
                   src={l.image}
                   alt={l.alt}
                   fill
                   sizes="100vw"
                   className="object-cover"
+                  loading={i < 2 ? "eager" : "lazy"}
+                  fetchPriority={i === 0 ? "high" : "auto"}
                 />
                 <div className="absolute inset-0 bg-gradient-to-t from-espresso-deep/85 via-transparent to-transparent" />
                 <span

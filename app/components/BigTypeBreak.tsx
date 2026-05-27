@@ -4,7 +4,7 @@ import { motion } from "framer-motion";
 
 export default function BigTypeBreak() {
   return (
-    <section className="relative bg-cream py-20 md:py-28 overflow-hidden">
+    <section className="relative bg-cream py-14 md:py-28 overflow-hidden">
       <div className="mx-auto max-w-[1480px] px-5 md:px-10 relative">
         <motion.h2
           initial={{ opacity: 0, y: 30 }}

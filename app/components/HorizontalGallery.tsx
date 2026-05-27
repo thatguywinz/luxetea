@@ -126,7 +126,7 @@ export default function HorizontalGallery() {
             <figure
               key={t.src}
               className={[
-                "relative rounded-3xl overflow-hidden flex-shrink-0 bg-cream-soft",
+                "relative rounded-3xl overflow-hidden flex-shrink-0 bg-espresso/30",
                 i % 2 === 0 ? "w-[420px] h-[540px]" : "w-[340px] h-[460px] mt-16",
               ].join(" ")}
             >
@@ -136,17 +136,19 @@ export default function HorizontalGallery() {
                 fill
                 sizes="420px"
                 className="object-cover"
+                loading={i < 3 ? "eager" : "lazy"}
+                fetchPriority={i === 0 ? "high" : "auto"}
               />
-              <figcaption className="absolute bottom-4 left-4 right-4 text-cream flex items-end justify-between">
+              <figcaption className="absolute bottom-4 left-4 right-4 text-cream flex items-end justify-between [text-shadow:0_1px_12px_rgba(0,0,0,0.6)]">
                 <span>
-                  <span className="block eyebrow text-cream/70">{t.tag}</span>
+                  <span className="block eyebrow text-cream/90">{t.tag}</span>
                   <span className="block font-display text-2xl mt-1">{t.label}</span>
                 </span>
-                <span className="text-xs uppercase tracking-widest opacity-70">
+                <span className="text-xs uppercase tracking-widest opacity-85">
                   {String(i + 1).padStart(2, "0")} / {String(tiles.length).padStart(2, "0")}
                 </span>
               </figcaption>
-              <div className="absolute inset-0 pointer-events-none bg-gradient-to-t from-ink/65 via-transparent to-transparent" />
+              <div className="absolute inset-0 pointer-events-none bg-gradient-to-t from-ink/85 via-ink/30 to-transparent" />
             </figure>
           ))}
           <div className="w-16 flex-shrink-0" />
@@ -154,10 +156,10 @@ export default function HorizontalGallery() {
 
         {/* Mobile native scroll fallback */}
         <div className="md:hidden flex gap-3 overflow-x-auto pl-5 pr-5 no-scrollbar snap-x snap-mandatory">
-          {tiles.map((t) => (
+          {tiles.map((t, i) => (
             <figure
               key={t.src}
-              className="relative rounded-3xl overflow-hidden flex-shrink-0 w-[78vw] h-[72vw] max-w-[420px] snap-start bg-cream-soft"
+              className="relative rounded-3xl overflow-hidden flex-shrink-0 w-[78vw] h-[72vw] max-w-[420px] snap-start bg-espresso/30"
             >
               <Image
                 src={t.src}
@@ -165,12 +167,14 @@ export default function HorizontalGallery() {
                 fill
                 sizes="78vw"
                 className="object-cover"
+                loading={i < 2 ? "eager" : "lazy"}
+                fetchPriority={i === 0 ? "high" : "auto"}
               />
-              <figcaption className="absolute bottom-3 left-3 right-3 text-cream">
-                <span className="block eyebrow text-cream/70">{t.tag}</span>
+              <figcaption className="absolute bottom-3 left-3 right-3 text-cream [text-shadow:0_1px_12px_rgba(0,0,0,0.6)]">
+                <span className="block eyebrow text-cream/90">{t.tag}</span>
                 <span className="block font-display text-xl">{t.label}</span>
               </figcaption>
-              <div className="absolute inset-0 pointer-events-none bg-gradient-to-t from-ink/65 via-transparent to-transparent" />
+              <div className="absolute inset-0 pointer-events-none bg-gradient-to-t from-ink/85 via-ink/30 to-transparent" />
             </figure>
           ))}
         </div>

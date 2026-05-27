@@ -35,7 +35,7 @@ export default function FAQ() {
   const [open, setOpen] = useState<number | null>(0);
 
   return (
-    <section id="faq" className="relative bg-cream py-24 md:py-32">
+    <section id="faq" className="relative bg-cream py-16 md:py-32">
       <div className="mx-auto max-w-[1480px] px-5 md:px-10 grid md:grid-cols-12 gap-10">
         <div className="md:col-span-4">
           <p className="eyebrow text-espresso">07 — Good to know</p>

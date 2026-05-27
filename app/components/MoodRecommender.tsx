@@ -1,7 +1,7 @@
 "use client";
 
 import Image from "next/image";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { AnimatePresence, motion } from "framer-motion";
 
 type Mood = {
@@ -14,6 +14,7 @@ type Mood = {
   alt: string;
   chip: string;
   swatch: string;
+  beginnerPick: boolean;
 };
 
 const moods: Mood[] = [
@@ -27,6 +28,7 @@ const moods: Mood[] = [
     alt: "Bright pink strawberry iced tea with fresh berries and ice",
     chip: "Fruit tea",
     swatch: "bg-lychee",
+    beginnerPick: true,
   },
   {
     id: "creamy",
@@ -38,6 +40,7 @@ const moods: Mood[] = [
     alt: "Matcha latte in a ceramic cup with foam on top, viewed from above",
     chip: "Matcha",
     swatch: "bg-matcha-deep",
+    beginnerPick: true,
   },
   {
     id: "coffee",
@@ -49,6 +52,7 @@ const moods: Mood[] = [
     alt: "Iced coffee with cream in a tall glass, close-up",
     chip: "Coffee",
     swatch: "bg-espresso",
+    beginnerPick: false,
   },
   {
     id: "refresh",
@@ -60,6 +64,7 @@ const moods: Mood[] = [
     alt: "Sparkling citrus drink with lemon and ice in a glass",
     chip: "Cold brew",
     swatch: "bg-cream-soft",
+    beginnerPick: false,
   },
   {
     id: "kids",
@@ -71,6 +76,7 @@ const moods: Mood[] = [
     alt: "Strawberry milkshake with whipped cream in a tall glass",
     chip: "Kids",
     swatch: "bg-peach",
+    beginnerPick: true,
   },
 ];
 
@@ -78,8 +84,17 @@ export default function MoodRecommender() {
   const [active, setActive] = useState(0);
   const m = moods[active];
 
+  // Preload all mood images on mount so switching is instant — avoids the
+  // ~3s blank card the audit flagged.
+  useEffect(() => {
+    moods.forEach((opt) => {
+      const img = new window.Image();
+      img.src = opt.image;
+    });
+  }, []);
+
   return (
-    <section id="mood" className="relative bg-cream py-24 md:py-32">
+    <section id="mood" className="relative bg-cream py-16 md:py-32">
       <div className="mx-auto max-w-[1480px] px-5 md:px-10">
         <div className="flex flex-col md:flex-row md:items-end md:justify-between gap-6 mb-12 md:mb-14">
           <div className="max-w-2xl">
@@ -143,7 +158,8 @@ export default function MoodRecommender() {
             ))}
           </div>
 
-          {/* Preview column */}
+          {/* Preview column — image, chips and copy all crossfade as one unit
+              keyed on the active mood so the tag/title can never desync. */}
           <div className="md:col-span-7 relative">
             <div className="relative aspect-[4/5] md:aspect-auto md:h-full md:min-h-[560px] rounded-3xl overflow-hidden bg-cream-soft border border-line">
               <AnimatePresence mode="wait">
@@ -152,7 +168,7 @@ export default function MoodRecommender() {
                   initial={{ opacity: 0, scale: 1.04 }}
                   animate={{ opacity: 1, scale: 1 }}
                   exit={{ opacity: 0, scale: 0.98 }}
-                  transition={{ duration: 0.55, ease: [0.22, 1, 0.36, 1] }}
+                  transition={{ duration: 0.5, ease: [0.22, 1, 0.36, 1] }}
                   className="absolute inset-0"
                 >
                   <Image
@@ -162,39 +178,37 @@ export default function MoodRecommender() {
                     sizes="(min-width: 768px) 50vw, 100vw"
                     className="object-cover"
                   />
-                  <div className="absolute inset-0 bg-gradient-to-t from-ink/80 via-ink/15 to-transparent" />
-                </motion.div>
-              </AnimatePresence>
+                  {/* Uniform strong scrim so overlay text always reads */}
+                  <div className="absolute inset-0 bg-gradient-to-t from-ink/85 via-ink/35 to-ink/15" />
 
-              <div className="absolute top-5 left-5 right-5 flex items-center justify-between">
-                <span className="bg-cream/90 text-ink text-[0.7rem] uppercase tracking-widest px-2.5 py-1 rounded-full">
-                  Beginner pick
-                </span>
-                <span className="bg-cream/90 text-ink text-[0.7rem] uppercase tracking-widest px-2.5 py-1 rounded-full">
-                  {m.chip}
-                </span>
-              </div>
+                  <div className="absolute top-5 left-5 right-5 flex items-center justify-between">
+                    {m.beginnerPick ? (
+                      <span className="bg-peach text-ink text-[0.7rem] uppercase tracking-widest px-2.5 py-1 rounded-full font-medium">
+                        Beginner pick
+                      </span>
+                    ) : (
+                      <span />
+                    )}
+                    <span className="bg-cream text-ink text-[0.7rem] uppercase tracking-widest px-2.5 py-1 rounded-full font-medium">
+                      {m.chip}
+                    </span>
+                  </div>
 
-              <AnimatePresence mode="wait">
-                <motion.div
-                  key={m.id + "-text"}
-                  initial={{ opacity: 0, y: 16 }}
-                  animate={{ opacity: 1, y: 0 }}
-                  exit={{ opacity: 0 }}
-                  transition={{ duration: 0.45 }}
-                  className="absolute bottom-6 left-6 right-6 text-cream"
-                >
-                  <p className="eyebrow text-cream/90">Today&apos;s pick</p>
-                  <h3 className="h-display text-3xl md:text-4xl mt-2">{m.pick}</h3>
-                  <p className="mt-2 text-cream/95 text-sm max-w-md leading-snug">
-                    {m.why}
-                  </p>
-                  <a
-                    href="#visit"
-                    className="mt-5 inline-flex items-center gap-2 bg-peach text-ink rounded-full px-5 py-3 text-sm font-medium hover:bg-cream transition-colors"
-                  >
-                    Get directions <span aria-hidden>→</span>
-                  </a>
+                  <div className="absolute bottom-6 left-6 right-6 text-cream [text-shadow:0_1px_14px_rgba(0,0,0,0.5)]">
+                    <p className="eyebrow text-peach">Today&apos;s pick</p>
+                    <h3 className="h-display text-3xl md:text-4xl mt-2">
+                      {m.pick}
+                    </h3>
+                    <p className="mt-2 text-cream/95 text-sm max-w-md leading-snug">
+                      {m.why}
+                    </p>
+                    <a
+                      href="#visit"
+                      className="mt-5 inline-flex items-center gap-2 bg-peach text-ink rounded-full px-5 py-3 text-sm font-medium hover:bg-cream transition-colors [text-shadow:none]"
+                    >
+                      Get directions <span aria-hidden>→</span>
+                    </a>
+                  </div>
                 </motion.div>
               </AnimatePresence>
             </div>

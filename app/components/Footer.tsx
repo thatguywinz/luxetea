@@ -2,7 +2,7 @@ import { BUSINESS } from "../lib/business";
 
 export default function Footer() {
   return (
-    <footer className="bg-ink text-cream/85">
+    <footer className="bg-ink text-cream/85 pb-24 md:pb-0">
       <div className="mx-auto max-w-[1480px] px-5 md:px-10 py-14 md:py-20 grid md:grid-cols-12 gap-10">
         <div className="md:col-span-5">
           <div className="flex items-center gap-2">

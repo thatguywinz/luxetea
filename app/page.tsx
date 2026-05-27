@@ -18,7 +18,7 @@ export default function Home() {
   return (
     <>
       <Nav />
-      <main id="main-content" className="pb-24 md:pb-0">
+      <main id="main-content">
         <Hero />
         <TrustStrip />
         <DrinkMarquee />
