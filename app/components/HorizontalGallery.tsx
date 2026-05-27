@@ -66,6 +66,16 @@ export default function HorizontalGallery() {
 
     let rafId = 0;
 
+    // Soft sine ease so the sideways motion doesn't snap on/off at the edges.
+    const easeInOutSine = (t: number) => -(Math.cos(Math.PI * t) - 1) / 2;
+
+    const getBuffers = () => {
+      // Lead-in/out keep the section "resting" before and after the scrub —
+      // gives the user a beat to register the section and to exit it.
+      const vh = window.innerHeight;
+      return { leadIn: vh * 0.3, leadOut: vh * 0.25 };
+    };
+
     const measure = () => {
       if (!desktopMql.matches || reduceMql.matches) {
         setSectionHeight(undefined);
@@ -75,8 +85,9 @@ export default function HorizontalGallery() {
       const track = trackRef.current;
       if (!track) return;
       const distance = Math.max(0, track.scrollWidth - window.innerWidth + 80);
-      // Outer height = 100vh (sticky stage) + horizontal scrub distance.
-      setSectionHeight(`calc(100vh + ${distance}px)`);
+      const { leadIn, leadOut } = getBuffers();
+      // Outer height = 100vh (sticky stage) + lead-in + scrub + lead-out.
+      setSectionHeight(`calc(100vh + ${distance + leadIn + leadOut}px)`);
     };
 
     const onScroll = () => {
@@ -88,10 +99,13 @@ export default function HorizontalGallery() {
       rafId = requestAnimationFrame(() => {
         const rect = section.getBoundingClientRect();
         const distance = Math.max(0, track.scrollWidth - window.innerWidth + 80);
+        const { leadIn } = getBuffers();
         const scrolled = Math.max(0, -rect.top);
-        const p = distance > 0 ? Math.min(1, scrolled / distance) : 0;
-        setProgress(p);
-        setTx(-distance * p);
+        const raw = distance > 0 ? (scrolled - leadIn) / distance : 0;
+        const clamped = Math.max(0, Math.min(1, raw));
+        const eased = easeInOutSine(clamped);
+        setProgress(clamped);
+        setTx(-distance * eased);
       });
     };
 
