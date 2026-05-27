@@ -11,8 +11,21 @@ export default function FinalCTA() {
         <div className="absolute inset-0 bg-gradient-to-tr from-espresso-deep via-espresso-deep/85 to-espresso-deep/60" />
       </div>
 
+      {/* Decorative outlined numeral */}
+      <span
+        aria-hidden
+        className="hidden md:block pointer-events-none absolute right-0 top-0 font-display text-[28rem] leading-none select-none"
+        style={{ WebkitTextStroke: "1px rgba(255,248,236,0.05)", color: "transparent" }}
+      >
+        09
+      </span>
+
       <div className="relative mx-auto max-w-[1480px] px-5 md:px-10 py-20 md:py-36 text-center">
-        <p className="eyebrow text-peach">09 — Come thirsty</p>
+        <p className="eyebrow text-peach flex items-center justify-center gap-3">
+          <span className="inline-block w-8 h-px bg-peach" />
+          09 — Come thirsty
+          <span className="inline-block w-8 h-px bg-peach" />
+        </p>
         <h2 className="h-display text-[clamp(2.8rem,8vw,7rem)] leading-[0.9] mt-6 text-cream">
           One walk.
           <br />

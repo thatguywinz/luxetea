@@ -1,7 +1,8 @@
 "use client";
 
+import { useRef } from "react";
 import Image from "next/image";
-import { motion } from "framer-motion";
+import { motion, useScroll, useTransform } from "framer-motion";
 import { BUSINESS } from "../lib/business";
 
 const RISE = {
@@ -10,15 +11,36 @@ const RISE = {
 };
 
 export default function Hero() {
+  const heroRef = useRef<HTMLElement>(null);
+  // Subtle parallax: image cluster drifts up; floating chips drift differently
+  // to create depth as you start scrolling.
+  const { scrollYProgress } = useScroll({
+    target: heroRef,
+    offset: ["start start", "end start"],
+  });
+  const imgY = useTransform(scrollYProgress, [0, 1], [0, -60]);
+  const chipY1 = useTransform(scrollYProgress, [0, 1], [0, -30]);
+  const chipY2 = useTransform(scrollYProgress, [0, 1], [0, -90]);
+  const headlineY = useTransform(scrollYProgress, [0, 1], [0, 40]);
+
   return (
     <section
+      ref={heroRef}
       id="top"
       className="relative pt-24 md:pt-28 lg:pt-32 pb-12 md:pb-20 overflow-hidden"
     >
+      {/* Decorative outlined numeral — editorial accent behind the headline */}
+      <span
+        aria-hidden
+        className="hidden md:block pointer-events-none absolute -left-4 top-10 font-display text-[26rem] leading-none select-none"
+        style={{ WebkitTextStroke: "1px rgba(42,39,37,0.05)", color: "transparent" }}
+      >
+        01
+      </span>
       {/* DESKTOP / TABLET HERO --------------------------------------------- */}
-      <div className="hidden md:block">
+      <div className="hidden md:block relative">
         <div className="mx-auto max-w-[1480px] px-10 grid grid-cols-12 gap-10 items-end">
-          <div className="col-span-7 relative z-10">
+          <motion.div className="col-span-7 relative z-10" style={{ y: headlineY }}>
             <motion.p
               initial="hidden"
               animate="show"
@@ -27,7 +49,7 @@ export default function Hero() {
               className="eyebrow text-espresso flex items-center gap-3"
             >
               <span className="inline-block w-8 h-px bg-espresso" />
-              Davisville · 230 Merton St
+              01 · Davisville · 230 Merton St
             </motion.p>
 
             <motion.h1
@@ -88,10 +110,10 @@ export default function Hero() {
                 Beltline Trail · Yonge &amp; Eglinton · Mount Pleasant
               </span>
             </motion.div>
-          </div>
+          </motion.div>
 
           {/* Hero image cluster */}
-          <div className="col-span-5 relative">
+          <motion.div className="col-span-5 relative" style={{ y: imgY }}>
             <motion.div
               initial={{ opacity: 1, scale: 1.03, y: 16 }}
               animate={{ opacity: 1, scale: 1, y: 0 }}
@@ -116,6 +138,7 @@ export default function Hero() {
               initial={{ opacity: 1, y: 6 }}
               animate={{ opacity: 1, y: 0 }}
               transition={{ duration: 0.55, delay: 0.35, ease: [0.22, 1, 0.36, 1] }}
+              style={{ y: chipY1 }}
               className="absolute -left-8 top-10 bg-cream rounded-2xl shadow-soft border border-line px-4 py-3 flex items-center gap-3"
             >
               <span className="h-9 w-9 rounded-full bg-lychee" />
@@ -132,6 +155,7 @@ export default function Hero() {
               initial={{ opacity: 1, y: 6 }}
               animate={{ opacity: 1, y: 0 }}
               transition={{ duration: 0.55, delay: 0.45, ease: [0.22, 1, 0.36, 1] }}
+              style={{ y: chipY2 }}
               className="absolute -right-6 bottom-12 bg-ink text-cream rounded-2xl shadow-cup px-4 py-3 flex items-center gap-3"
             >
               <span className="h-2 w-2 rounded-full bg-peach" />
@@ -148,11 +172,11 @@ export default function Hero() {
               initial={{ opacity: 1, x: -8 }}
               animate={{ opacity: 1, x: 0 }}
               transition={{ duration: 0.55, delay: 0.55, ease: [0.22, 1, 0.36, 1] }}
-              className="absolute -right-2 -top-2 bg-matcha rounded-full px-4 py-2 text-xs font-medium text-ink"
+              className="absolute -right-2 -top-2 bg-matcha rounded-full px-4 py-2 text-xs font-medium text-ink shadow-soft"
             >
               50% sweet · less ice
             </motion.div>
-          </div>
+          </motion.div>
         </div>
 
         {/* Scroll cue */}

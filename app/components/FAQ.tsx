@@ -35,10 +35,21 @@ export default function FAQ() {
   const [open, setOpen] = useState<number | null>(0);
 
   return (
-    <section id="faq" className="relative bg-cream py-16 md:py-32">
-      <div className="mx-auto max-w-[1480px] px-5 md:px-10 grid md:grid-cols-12 gap-10">
+    <section id="faq" className="relative bg-cream py-16 md:py-32 overflow-hidden">
+      <span
+        aria-hidden
+        className="hidden md:block pointer-events-none absolute -left-6 top-24 font-display text-[22rem] leading-none select-none"
+        style={{ WebkitTextStroke: "1px rgba(42,39,37,0.06)", color: "transparent" }}
+      >
+        07
+      </span>
+
+      <div className="relative mx-auto max-w-[1480px] px-5 md:px-10 grid md:grid-cols-12 gap-10">
         <div className="md:col-span-4">
-          <p className="eyebrow text-espresso">07 — Good to know</p>
+          <p className="eyebrow text-espresso flex items-center gap-3">
+            <span className="inline-block w-8 h-px bg-espresso" />
+            07 — Good to know
+          </p>
           <h2 className="h-display mt-4 text-[clamp(2.2rem,4.5vw,3.6rem)] text-ink">
             Before you order.
           </h2>

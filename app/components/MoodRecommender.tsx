@@ -94,11 +94,23 @@ export default function MoodRecommender() {
   }, []);
 
   return (
-    <section id="mood" className="relative bg-cream py-16 md:py-32">
-      <div className="mx-auto max-w-[1480px] px-5 md:px-10">
+    <section id="mood" className="relative bg-cream py-16 md:py-32 overflow-hidden">
+      {/* Decorative outlined numeral */}
+      <span
+        aria-hidden
+        className="hidden md:block pointer-events-none absolute -left-6 top-24 font-display text-[22rem] leading-none select-none"
+        style={{ WebkitTextStroke: "1px rgba(42,39,37,0.06)", color: "transparent" }}
+      >
+        04
+      </span>
+
+      <div className="relative mx-auto max-w-[1480px] px-5 md:px-10">
         <div className="flex flex-col md:flex-row md:items-end md:justify-between gap-6 mb-12 md:mb-14">
           <div className="max-w-2xl">
-            <p className="eyebrow text-espresso">04 — Not sure what to order?</p>
+            <p className="eyebrow text-espresso flex items-center gap-3">
+              <span className="inline-block w-8 h-px bg-espresso" />
+              04 — Not sure what to order?
+            </p>
             <h2 className="h-display mt-4 text-[clamp(2.4rem,5.5vw,4.6rem)] text-ink">
               Tell us the mood. <span className="italic">We&apos;ll pour the drink.</span>
             </h2>
@@ -117,10 +129,10 @@ export default function MoodRecommender() {
                 key={opt.id}
                 onClick={() => setActive(i)}
                 className={[
-                  "group text-left rounded-2xl border transition-all duration-300 px-5 py-4 md:px-6 md:py-5 flex items-center gap-4",
+                  "group text-left rounded-2xl border transition-all duration-300 px-5 py-4 md:px-6 md:py-5 flex items-center gap-4 relative overflow-hidden",
                   i === active
-                    ? "border-ink bg-ink text-cream shadow-soft"
-                    : "border-line bg-paper text-ink hover:bg-cream-soft",
+                    ? "border-ink bg-ink text-cream shadow-cup"
+                    : "border-line bg-paper text-ink hover:bg-cream-soft hover:border-ink/25 hover:-translate-y-0.5",
                 ].join(" ")}
                 aria-pressed={i === active}
               >

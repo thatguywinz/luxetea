@@ -95,11 +95,23 @@ const toneBg: Record<Cat["tone"], string> = {
 
 export default function Categories() {
   return (
-    <section id="menu" className="relative py-16 md:py-32">
-      <div className="mx-auto max-w-[1480px] px-5 md:px-10">
+    <section id="menu" className="relative py-16 md:py-32 overflow-hidden">
+      {/* Decorative outlined numeral — editorial accent */}
+      <span
+        aria-hidden
+        className="hidden md:block pointer-events-none absolute -right-6 top-24 font-display text-[22rem] leading-none select-none"
+        style={{ WebkitTextStroke: "1px rgba(42,39,37,0.06)", color: "transparent" }}
+      >
+        02
+      </span>
+
+      <div className="relative mx-auto max-w-[1480px] px-5 md:px-10">
         <div className="flex flex-col md:flex-row md:items-end md:justify-between gap-6 mb-12 md:mb-16">
           <div className="max-w-xl">
-            <p className="eyebrow text-espresso">02 — The menu</p>
+            <p className="eyebrow text-espresso flex items-center gap-3">
+              <span className="inline-block w-8 h-px bg-espresso" />
+              02 — The menu
+            </p>
             <h2 className="h-display mt-4 text-[clamp(2.4rem,5.5vw,4.6rem)] text-ink">
               Six ways to drink at <span className="italic">Luxe</span>.
             </h2>
@@ -120,6 +132,7 @@ export default function Categories() {
               transition={{ duration: 0.6, delay: i * 0.05, ease: [0.22, 1, 0.36, 1] }}
               className={[
                 "group relative overflow-hidden rounded-3xl border border-line flex flex-col",
+                "transition-all duration-500 ease-out hover:-translate-y-1 hover:shadow-cup hover:border-ink/20",
                 toneBg[c.tone],
               ].join(" ")}
             >

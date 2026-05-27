@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useRef } from "react";
+import { useEffect, useRef, useState } from "react";
 import Image from "next/image";
 
 type Tile = { src: string; alt: string; label: string; tag: string };
@@ -51,82 +51,119 @@ const tiles: Tile[] = [
 ];
 
 export default function HorizontalGallery() {
-  const sectionRef = useRef<HTMLDivElement>(null);
+  const sectionRef = useRef<HTMLElement>(null);
   const trackRef = useRef<HTMLDivElement>(null);
+  const [tx, setTx] = useState(0);
+  const [sectionHeight, setSectionHeight] = useState<string | undefined>(undefined);
+  const [progress, setProgress] = useState(0);
 
+  // Sticky-driven horizontal scrub on desktop. No GSAP pin = no clash with
+  // Lenis or upstream pinned sections.
   useEffect(() => {
-    const isDesktop = window.matchMedia("(min-width: 768px)").matches;
-    const reduce = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
-    if (!isDesktop || reduce) return;
+    if (typeof window === "undefined") return;
+    const desktopMql = window.matchMedia("(min-width: 768px)");
+    const reduceMql = window.matchMedia("(prefers-reduced-motion: reduce)");
 
-    let cancelled = false;
-    let ctx: { revert: () => void } | undefined;
+    let rafId = 0;
 
-    (async () => {
-      const gsapMod = await import("gsap");
-      const stMod = await import("gsap/ScrollTrigger");
-      if (cancelled) return;
-      const gsap = gsapMod.default;
-      const ScrollTrigger = stMod.ScrollTrigger;
-      gsap.registerPlugin(ScrollTrigger);
+    const measure = () => {
+      if (!desktopMql.matches || reduceMql.matches) {
+        setSectionHeight(undefined);
+        setTx(0);
+        return;
+      }
+      const track = trackRef.current;
+      if (!track) return;
+      const distance = Math.max(0, track.scrollWidth - window.innerWidth + 80);
+      // Outer height = 100vh (sticky stage) + horizontal scrub distance.
+      setSectionHeight(`calc(100vh + ${distance}px)`);
+    };
 
-      ctx = gsap.context(() => {
-        if (!sectionRef.current || !trackRef.current) return;
-        const track = trackRef.current;
-        const distance = track.scrollWidth - window.innerWidth + 64;
+    const onScroll = () => {
+      if (!desktopMql.matches || reduceMql.matches) return;
+      const section = sectionRef.current;
+      const track = trackRef.current;
+      if (!section || !track) return;
+      cancelAnimationFrame(rafId);
+      rafId = requestAnimationFrame(() => {
+        const rect = section.getBoundingClientRect();
+        const distance = Math.max(0, track.scrollWidth - window.innerWidth + 80);
+        const scrolled = Math.max(0, -rect.top);
+        const p = distance > 0 ? Math.min(1, scrolled / distance) : 0;
+        setProgress(p);
+        setTx(-distance * p);
+      });
+    };
 
-        gsap.to(track, {
-          x: () => `-${distance}px`,
-          ease: "none",
-          scrollTrigger: {
-            trigger: sectionRef.current,
-            start: "top top",
-            end: () => `+=${distance + 200}`,
-            scrub: 0.6,
-            pin: true,
-            invalidateOnRefresh: true,
-          },
-        });
-      }, sectionRef);
-    })();
-
+    measure();
+    onScroll();
+    window.addEventListener("scroll", onScroll, { passive: true });
+    window.addEventListener("resize", () => {
+      measure();
+      onScroll();
+    });
+    desktopMql.addEventListener("change", () => {
+      measure();
+      onScroll();
+    });
     return () => {
-      cancelled = true;
-      ctx?.revert();
+      cancelAnimationFrame(rafId);
+      window.removeEventListener("scroll", onScroll);
     };
   }, []);
 
   return (
     <section
+      id="gallery"
       ref={sectionRef}
-      className="relative bg-paper border-y border-line overflow-hidden"
+      className="relative bg-paper border-y border-line"
+      style={sectionHeight ? { height: sectionHeight } : undefined}
     >
-      <div className="md:h-screen flex flex-col justify-center py-16 md:py-0">
+      {/* Sticky stage — browser-native pinning, no ScrollTrigger needed. */}
+      <div className="md:sticky md:top-0 md:h-screen md:overflow-hidden flex flex-col justify-center py-16 md:py-0">
         <div className="mx-auto max-w-[1480px] px-5 md:px-10 mb-10 md:mb-12 w-full">
           <div className="flex flex-col md:flex-row md:items-end md:justify-between gap-4">
             <div>
-              <p className="eyebrow text-espresso">05 — In the shop</p>
+              <p className="eyebrow text-espresso flex items-center gap-3">
+                <span className="inline-block w-8 h-px bg-espresso" />
+                05 — In the shop
+              </p>
               <h2 className="h-display mt-4 text-[clamp(2.4rem,5vw,4rem)] text-ink">
-                A look around Luxe.
+                A look around <span className="italic">Luxe.</span>
               </h2>
             </div>
-            <p className="md:max-w-xs text-ink/80 text-sm">
-              Drift through the cafe — fresh fruit, warm wood, drink builds
-              and the Merton St doorway.
-            </p>
+            <div className="md:max-w-sm flex flex-col gap-3">
+              <p className="text-ink/80 text-sm">
+                Drift through the cafe — fresh fruit, warm wood, drink builds
+                and the Merton St doorway.
+              </p>
+              <div className="hidden md:flex items-center gap-3 text-[0.7rem] uppercase tracking-[0.22em] text-ink/65">
+                <span className="h-px w-10 bg-ink/30" />
+                <span>
+                  {String(Math.min(tiles.length, Math.round(progress * (tiles.length - 1)) + 1)).padStart(2, "0")} / {String(tiles.length).padStart(2, "0")}
+                </span>
+                <span className="relative flex-1 h-px bg-ink/15 overflow-hidden">
+                  <span
+                    className="absolute inset-y-0 left-0 bg-espresso origin-left"
+                    style={{ width: `${progress * 100}%` }}
+                  />
+                </span>
+              </div>
+            </div>
           </div>
         </div>
 
-        {/* Desktop horizontal track */}
+        {/* Desktop horizontal track — translated via inline transform */}
         <div
           ref={trackRef}
           className="hidden md:flex md:pl-10 md:gap-6 md:w-max md:will-change-transform"
+          style={{ transform: `translate3d(${tx}px,0,0)` }}
         >
           {tiles.map((t, i) => (
             <figure
               key={t.src}
               className={[
-                "relative rounded-3xl overflow-hidden flex-shrink-0 bg-espresso/30",
+                "relative rounded-3xl overflow-hidden flex-shrink-0 bg-espresso/30 shadow-cup",
                 i % 2 === 0 ? "w-[420px] h-[540px]" : "w-[340px] h-[460px] mt-16",
               ].join(" ")}
             >
@@ -139,6 +176,7 @@ export default function HorizontalGallery() {
                 loading={i < 3 ? "eager" : "lazy"}
                 fetchPriority={i === 0 ? "high" : "auto"}
               />
+              <div className="absolute inset-0 pointer-events-none bg-gradient-to-t from-ink/85 via-ink/30 to-transparent" />
               <figcaption className="absolute bottom-4 left-4 right-4 text-cream flex items-end justify-between [text-shadow:0_1px_12px_rgba(0,0,0,0.6)]">
                 <span>
                   <span className="block eyebrow text-cream/90">{t.tag}</span>
@@ -148,10 +186,9 @@ export default function HorizontalGallery() {
                   {String(i + 1).padStart(2, "0")} / {String(tiles.length).padStart(2, "0")}
                 </span>
               </figcaption>
-              <div className="absolute inset-0 pointer-events-none bg-gradient-to-t from-ink/85 via-ink/30 to-transparent" />
             </figure>
           ))}
-          <div className="w-16 flex-shrink-0" />
+          <div className="w-20 flex-shrink-0" />
         </div>
 
         {/* Mobile native scroll fallback */}

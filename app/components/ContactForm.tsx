@@ -53,10 +53,21 @@ export default function ContactForm() {
   };
 
   return (
-    <section id="contact" className="relative bg-paper py-16 md:py-32">
-      <div className="mx-auto max-w-[1480px] px-5 md:px-10 grid md:grid-cols-12 gap-10 md:gap-14">
+    <section id="contact" className="relative bg-paper py-16 md:py-32 overflow-hidden">
+      <span
+        aria-hidden
+        className="hidden md:block pointer-events-none absolute -right-6 top-24 font-display text-[22rem] leading-none select-none"
+        style={{ WebkitTextStroke: "1px rgba(42,39,37,0.06)", color: "transparent" }}
+      >
+        08
+      </span>
+
+      <div className="relative mx-auto max-w-[1480px] px-5 md:px-10 grid md:grid-cols-12 gap-10 md:gap-14">
         <div className="md:col-span-5">
-          <p className="eyebrow text-espresso">08 — Say hello</p>
+          <p className="eyebrow text-espresso flex items-center gap-3">
+            <span className="inline-block w-8 h-px bg-espresso" />
+            08 — Say hello
+          </p>
           <h2 className="h-display mt-4 text-[clamp(2.4rem,5vw,4rem)] text-ink">
             Catering, group orders <span className="italic">or hello</span>.
           </h2>
