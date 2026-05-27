@@ -93,84 +93,119 @@ export default function DrinkBuilder() {
       ref={sectionRef}
       className="relative bg-espresso-deep text-cream md:h-[400vh]"
     >
-      {/* Decorative outlined numeral baked into the section — adds depth on
-          desktop without affecting layout flow. */}
-      <span
-        aria-hidden
-        className="hidden md:block pointer-events-none absolute right-4 top-32 font-display text-[26rem] leading-none text-cream/[0.04] select-none"
-        style={{ WebkitTextStroke: "1px rgba(255,248,236,0.06)", color: "transparent" }}
-      >
-        03
-      </span>
       <div className="noise pointer-events-none absolute inset-0" />
 
       {/* Sticky pane — browser-native, plays nice with Lenis and overflow. */}
       <div className="md:sticky md:top-0 md:h-screen md:overflow-hidden flex flex-col justify-center">
-        <div className="relative mx-auto w-full max-w-[1480px] px-5 md:px-10 py-20 md:py-0 md:pt-[7.5rem] md:pb-12">
-          <div className="md:flex md:items-end md:justify-between md:gap-10 mb-10 md:mb-10">
-            <div className="max-w-2xl">
+        <div className="relative w-full px-5 md:px-12 lg:px-16 xl:px-24 py-20 md:py-0 md:pt-36 md:pb-12 lg:pt-48">
+          <div className="md:flex md:items-end md:justify-between md:gap-16 mb-10 md:mb-14">
+            <div className="max-w-[44rem]">
               <p className="eyebrow text-peach flex items-center gap-3">
                 <span className="inline-block w-8 h-px bg-peach" />
                 03 — From leaf to cup
               </p>
-              <h2 className="h-display mt-4 text-[clamp(2.4rem,5vw,4.2rem)] text-cream">
+              <h2 className="h-display mt-3 text-[clamp(2.2rem,4.5vw,4rem)] text-cream leading-[1.05]">
                 We build every drink,{" "}
                 <span className="italic text-peach">one cup at a time.</span>
               </h2>
             </div>
-            <p className="mt-4 md:mt-0 md:max-w-xs text-cream/85 text-sm leading-relaxed">
-              No pre-mixes. No shortcuts. Scroll to watch a Luxe drink come
-              together.
+            <p className="mt-4 md:mt-0 md:max-w-[22rem] text-cream/75 text-sm leading-relaxed md:text-right">
+              No pre-mixes. No shortcuts.<br />
+              Scroll to watch a Luxe drink come together.
             </p>
           </div>
 
-          {/* DESKTOP scrubbed track */}
-          <div className="hidden md:grid md:grid-cols-12 md:gap-10 md:items-center">
-            <div className="col-span-5">
-              <ol className="space-y-4">
-                {layers.map((l, i) => (
-                  <li
-                    key={l.label}
-                    className={[
-                      "relative pl-14 transition-opacity duration-500 transition-transform",
-                      i === active
-                        ? "opacity-100 translate-x-0"
-                        : "opacity-35 translate-x-0",
-                    ].join(" ")}
-                  >
-                    <span
+          {/* DESKTOP scrubbed track — full-width fluid grid */}
+          <div className="hidden md:grid md:grid-cols-[minmax(320px,400px)_1fr] lg:grid-cols-[minmax(380px,460px)_1fr] md:gap-12 lg:gap-20 md:items-center">
+            <div className="relative">
+              <ol className="space-y-5 relative">
+                {layers.map((l, i) => {
+                  const isLast = i === layers.length - 1;
+                  const segProgress = isLast
+                    ? 0
+                    : Math.max(
+                        0,
+                        Math.min(1, progress * (layers.length - 1) - i)
+                      );
+                  return (
+                    <li
+                      key={l.label}
                       className={[
-                        "absolute left-0 top-1 inline-flex h-10 w-10 rounded-full items-center justify-center text-xs font-medium text-ink transition-transform duration-500",
-                        i === active ? "scale-110 shadow-cup" : "scale-100",
+                        "relative pl-14 transition-all duration-500",
+                        i === active
+                          ? "opacity-100"
+                          : "opacity-55 hover:opacity-80",
                       ].join(" ")}
-                      style={{ background: l.color }}
                     >
-                      {String(i + 1).padStart(2, "0")}
-                    </span>
-                    <h3 className="font-display text-2xl leading-snug">
-                      {l.label}
-                    </h3>
-                    <p className="text-cream/85 text-sm mt-1 max-w-md leading-relaxed">
-                      {l.note}
-                    </p>
-                  </li>
-                ))}
+                      {/* connector segment to the NEXT dot — never overlaps any dot */}
+                      {!isLast && (
+                        <>
+                          <span
+                            aria-hidden
+                            className="absolute left-[19.5px] top-12 w-px bg-cream/12"
+                            style={{ bottom: "-1.5rem" }}
+                          />
+                          <span
+                            aria-hidden
+                            className="absolute left-[19.5px] top-12 w-px bg-peach origin-top will-change-transform"
+                            style={{
+                              bottom: "-1.5rem",
+                              transform: `scaleY(${segProgress})`,
+                            }}
+                          />
+                        </>
+                      )}
+
+                      <span
+                        className={[
+                          "absolute left-0 top-1 inline-flex h-10 w-10 rounded-full items-center justify-center text-[0.7rem] font-medium transition-all duration-500 ring-4 ring-espresso-deep z-10",
+                          i === active ? "scale-110 shadow-cup" : "scale-95",
+                          i > active
+                            ? "bg-espresso-deep border border-cream/25 text-cream/60"
+                            : "",
+                        ]
+                          .filter(Boolean)
+                          .join(" ")}
+                        style={
+                          i <= active
+                            ? { background: l.color, color: "#231915" }
+                            : undefined
+                        }
+                      >
+                        {String(i + 1).padStart(2, "0")}
+                      </span>
+                      <h3
+                        className={[
+                          "font-display leading-tight transition-all duration-500",
+                          i === active ? "text-[1.65rem]" : "text-[1.4rem]",
+                        ].join(" ")}
+                      >
+                        {l.label}
+                      </h3>
+                      <p
+                        className={[
+                          "text-sm mt-1 max-w-md leading-relaxed transition-colors duration-500",
+                          i === active ? "text-cream/90" : "text-cream/60",
+                        ].join(" ")}
+                      >
+                        {l.note}
+                      </p>
+                    </li>
+                  );
+                })}
               </ol>
 
-              <div className="mt-10 h-px bg-cream/15 relative overflow-hidden">
-                <span
-                  className="block h-full bg-peach origin-left will-change-transform"
-                  style={{ transform: `scaleX(${progress})` }}
-                />
-              </div>
-              <div className="mt-3 flex items-center justify-between text-[0.7rem] uppercase tracking-[0.22em] text-cream/80">
-                <span>Step {String(active + 1).padStart(2, "0")} / 04</span>
+              <div className="mt-8 flex items-center justify-between text-[0.7rem] uppercase tracking-[0.22em] text-cream/70">
+                <span className="text-peach">
+                  Step {String(active + 1).padStart(2, "0")}
+                  <span className="text-cream/40"> / 04</span>
+                </span>
                 <span>Scroll to brew →</span>
               </div>
             </div>
 
-            <div className="col-span-7 relative">
-              <div className="relative aspect-[4/5] max-h-[68vh] rounded-[28px] overflow-hidden bg-ink/40 shadow-cup">
+            <div className="relative">
+              <div className="relative w-full h-[min(64vh,620px)] rounded-[28px] overflow-hidden bg-ink/40 shadow-cup">
                 {layers.map((l, i) => (
                   <div
                     key={l.label}
@@ -184,7 +219,7 @@ export default function DrinkBuilder() {
                       src={l.image}
                       alt=""
                       fill
-                      sizes="(min-width: 768px) 50vw, 100vw"
+                      sizes="(min-width: 1024px) 65vw, (min-width: 768px) 55vw, 100vw"
                       className={[
                         "object-cover transition-transform duration-[1400ms] ease-out",
                         i === active ? "scale-100" : "scale-105",
@@ -192,10 +227,10 @@ export default function DrinkBuilder() {
                       priority={i === 0}
                       fetchPriority={i === 0 ? "high" : "auto"}
                     />
-                    <div className="absolute inset-0 bg-gradient-to-t from-espresso-deep/85 via-espresso-deep/15 to-transparent" />
-                    <div className="absolute bottom-6 left-6 right-6 flex items-end justify-between gap-4">
+                    <div className="absolute inset-0 bg-gradient-to-t from-espresso-deep/90 via-espresso-deep/20 to-espresso-deep/30" />
+                    <div className="absolute bottom-7 left-7 right-7 lg:bottom-9 lg:left-9 lg:right-9 flex items-end justify-between gap-4">
                       <span
-                        className="font-display text-[5rem] leading-none"
+                        className="font-display text-[clamp(4rem,7vw,6.5rem)] leading-none"
                         style={{
                           WebkitTextStroke: "1px rgba(255,248,236,0.55)",
                           color: "transparent",
@@ -203,7 +238,10 @@ export default function DrinkBuilder() {
                       >
                         {String(i + 1).padStart(2, "0")}
                       </span>
-                      <span className="bg-cream text-ink text-xs uppercase tracking-widest px-3 py-1.5 rounded-full">
+                      <span
+                        className="text-xs uppercase tracking-widest px-3.5 py-1.5 rounded-full"
+                        style={{ background: l.color, color: "#231915" }}
+                      >
                         {l.label}
                       </span>
                     </div>
@@ -211,10 +249,26 @@ export default function DrinkBuilder() {
                 ))}
 
                 {/* corner crop accents */}
-                <span aria-hidden className="absolute top-4 left-4 h-5 w-5 border-l border-t border-cream/40 rounded-tl-sm" />
-                <span aria-hidden className="absolute top-4 right-4 h-5 w-5 border-r border-t border-cream/40 rounded-tr-sm" />
-                <span aria-hidden className="absolute bottom-4 left-4 h-5 w-5 border-l border-b border-cream/40 rounded-bl-sm" />
-                <span aria-hidden className="absolute bottom-4 right-4 h-5 w-5 border-r border-b border-cream/40 rounded-br-sm" />
+                <span aria-hidden className="absolute top-5 left-5 h-5 w-5 border-l border-t border-cream/40 rounded-tl-sm" />
+                <span aria-hidden className="absolute top-5 right-5 h-5 w-5 border-r border-t border-cream/40 rounded-tr-sm" />
+                <span aria-hidden className="absolute bottom-5 left-5 h-5 w-5 border-l border-b border-cream/40 rounded-bl-sm" />
+                <span aria-hidden className="absolute bottom-5 right-5 h-5 w-5 border-r border-b border-cream/40 rounded-br-sm" />
+
+                {/* outer top-right step counter chip — premium editorial touch */}
+                <span
+                  aria-hidden
+                  className="absolute top-6 right-6 font-mono text-[0.65rem] uppercase tracking-[0.25em] text-cream/80 bg-espresso-deep/40 backdrop-blur-sm border border-cream/15 rounded-full px-3 py-1"
+                >
+                  {String(active + 1).padStart(2, "0")} / {String(layers.length).padStart(2, "0")}
+                </span>
+              </div>
+
+              {/* scrub progress bar lives under the image, tied to the visual */}
+              <div className="mt-6 h-px bg-cream/12 relative overflow-hidden">
+                <span
+                  className="block h-full bg-peach origin-left will-change-transform"
+                  style={{ transform: `scaleX(${progress})` }}
+                />
               </div>
             </div>
           </div>

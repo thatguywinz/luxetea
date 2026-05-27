@@ -27,7 +27,7 @@ export default function Hero() {
     <section
       ref={heroRef}
       id="top"
-      className="relative pt-24 md:pt-28 lg:pt-32 pb-12 md:pb-20 overflow-hidden"
+      className="relative pt-20 md:pt-20 lg:pt-24 pb-12 md:pb-20 overflow-hidden"
     >
       {/* Decorative outlined numeral — editorial accent behind the headline */}
       <span
